@@ -1,87 +1,65 @@
-# Active Context: Next.js Starter Template
+# Active Context: ConflictPulse Dashboard
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: ✅ Complete
+**Type**: Comparative Conflict Dashboard Web Application
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+ConflictPulse is a real-time conflict comparison dashboard that displays Iran 2026 conflict data alongside historical US-involved wars (Iraq 2003, Afghanistan 2001, Vietnam 1965).
 
 ## Recently Completed
 
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
+- [x] ConflictPulse dashboard with dark military/intelligence aesthetic
+- [x] War selector panel for historical comparison
+- [x] Metric cards showing intensity, casualties, displacement, oil impact
+- [x] Comparison chart with toggleable views (fatalities, events, displacement)
+- [x] War Clock timeline visualization
+- [x] Oil price tracker ("Hormuz Ripple")
+- [x] Interactive Leaflet map with regional hotspots
+- [x] Demo data for all conflicts (Iran, Iraq, Afghanistan, Vietnam)
+- [x] Responsive layout with sidebar
+
+## Tech Stack
+
+- Next.js 16 with App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Recharts for data visualization
+- Leaflet/React-Leaflet for maps
+- Bun package manager
 
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
-| `.kilocode/` | AI context & recipes | ✅ Ready |
+| `src/app/page.tsx` | Main dashboard | ✅ Complete |
+| `src/app/globals.css` | Theme & styles | ✅ Complete |
+| `src/lib/types.ts` | TypeScript types | ✅ Complete |
+| `src/lib/data.ts` | Demo data | ✅ Complete |
+| `src/components/MetricCard.tsx` | Metric display | ✅ Complete |
+| `src/components/WarSelector.tsx` | War selector | ✅ Complete |
+| `src/components/ComparisonChart.tsx` | Bar chart | ✅ Complete |
+| `src/components/OilPriceChart.tsx` | Oil tracker | ✅ Complete |
+| `src/components/WarClock.tsx` | Timeline | ✅ Complete |
+| `src/components/ConflictMap.tsx` | Leaflet map | ✅ Complete |
+| `src/components/MapWrapper.tsx` | Dynamic map loader | ✅ Complete |
 
-## Current Focus
+## Design System
 
-The template is ready. Next steps depend on user requirements:
-
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
-
-## Quick Start Guide
-
-### To add a new page:
-
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
-```
-
-### To add components:
-
-Create `src/components/` directory and add components:
-```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
-}
-```
-
-### To add a database:
-
-Follow `.kilocode/recipes/add-database.md`
-
-### To add API routes:
-
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
-```
-
-## Available Recipes
-
-| Recipe | File | Use Case |
-|--------|------|----------|
-| Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
-
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
+- **Colors**: Dark theme (#0a0c10 primary), red-orange for live (#ff3d00), cyan for historical (#00e5ff)
+- **Typography**: JetBrains Mono (headings), IBM Plex Sans (body), Space Mono (data)
+- **Effects**: Glow cards, pulse animations, smooth transitions
 
 ## Session History
 
 | Date | Changes |
 |------|---------|
-| Initial | Template created with base setup |
+| 2026-03-19 | Created ConflictPulse dashboard with full feature set |
+
+## Pending Improvements
+
+- [ ] API integration (ACLED, UCDP, HDX) with rate limiting and caching
+- [ ] Additional chart types
+- [ ] Export functionality
+- [ ] Dark/light mode toggle
