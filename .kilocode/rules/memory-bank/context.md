@@ -2,22 +2,18 @@
 
 ## Current State
 
-**Project Status**: ✅ Complete
+**Project Status**: ✅ Production-ready with API integration
 **Type**: Comparative Conflict Dashboard Web Application
 
 ConflictPulse is a real-time conflict comparison dashboard that displays Iran 2026 conflict data alongside historical US-involved wars (Iraq 2003, Afghanistan 2001, Vietnam 1965).
 
 ## Recently Completed
 
-- [x] ConflictPulse dashboard with dark military/intelligence aesthetic
-- [x] War selector panel for historical comparison
-- [x] Metric cards showing intensity, casualties, displacement, oil impact
-- [x] Comparison chart with toggleable views (fatalities, events, displacement)
-- [x] War Clock timeline visualization
-- [x] Oil price tracker ("Hormuz Ripple")
-- [x] Interactive Leaflet map with regional hotspots
-- [x] Demo data for all conflicts (Iran, Iraq, Afghanistan, Vietnam)
-- [x] Responsive layout with sidebar
+- [x] API integration layer with ACLED and HDX
+- [x] Static historical data for UCDP replacement (Iraq, Afghanistan, Vietnam)
+- [x] API status indicators in header
+- [x] Data fetching utilities with fallback to demo data
+- [x] Environment-based credential loading
 
 ## Tech Stack
 
@@ -29,21 +25,32 @@ ConflictPulse is a real-time conflict comparison dashboard that displays Iran 20
 - Leaflet/React-Leaflet for maps
 - Bun package manager
 
+## API Integration
+
+| Source | Endpoint | Status |
+|--------|----------|--------|
+| ACLED | `/api/acled` | ✅ OAuth2 email/password |
+| HDX/HAPI | `/api/hdx` | ✅ App identifier |
+| Historical | `/api/historical` | ✅ Static JSON |
+
+## Environment Variables
+
+```
+ACLED_EMAIL=your-email
+ACLED_PASSWORD=your-password
+HAPI_APP_IDENTIFIER=your-app-id
+```
+
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
-| `src/app/page.tsx` | Main dashboard | ✅ Complete |
-| `src/app/globals.css` | Theme & styles | ✅ Complete |
-| `src/lib/types.ts` | TypeScript types | ✅ Complete |
-| `src/lib/data.ts` | Demo data | ✅ Complete |
-| `src/components/MetricCard.tsx` | Metric display | ✅ Complete |
-| `src/components/WarSelector.tsx` | War selector | ✅ Complete |
-| `src/components/ComparisonChart.tsx` | Bar chart | ✅ Complete |
-| `src/components/OilPriceChart.tsx` | Oil tracker | ✅ Complete |
-| `src/components/WarClock.tsx` | Timeline | ✅ Complete |
-| `src/components/ConflictMap.tsx` | Leaflet map | ✅ Complete |
-| `src/components/MapWrapper.tsx` | Dynamic map loader | ✅ Complete |
+| `src/app/page.tsx` | Main dashboard with API | ✅ Complete |
+| `src/app/api/acled/route.ts` | ACLED proxy | ✅ Complete |
+| `src/app/api/hdx/route.ts` | HDX proxy | ✅ Complete |
+| `src/app/api/historical/route.ts` | Static data server | ✅ Complete |
+| `src/lib/api.ts` | Data fetching utilities | ✅ Complete |
+| `src/data/historical.json` | Historical conflict data | ✅ Complete |
 
 ## Design System
 
@@ -56,10 +63,10 @@ ConflictPulse is a real-time conflict comparison dashboard that displays Iran 20
 | Date | Changes |
 |------|---------|
 | 2026-03-19 | Created ConflictPulse dashboard with full feature set |
+| 2026-03-20 | Added API integration for ACLED/HDX, static historical data |
 
 ## Pending Improvements
 
-- [ ] API integration (ACLED, UCDP, HDX) with rate limiting and caching
-- [ ] Additional chart types
-- [ ] Export functionality
-- [ ] Dark/light mode toggle
+- [ ] Add oil price API (Alpha Vantage)
+- [ ] Real-time WebSocket updates
+- [ ] Data export functionality

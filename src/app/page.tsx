@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { WarType } from '@/lib/types';
+import { WarType, ConflictData } from '@/lib/types';
 import { getConflictData, mapMarkers, oilPriceData } from '@/lib/data';
+import { fetchLiveData, fetchHistoricalData, getApiStatus } from '@/lib/api';
 import MetricCard from '@/components/MetricCard';
 import WarSelector from '@/components/WarSelector';
 import ComparisonChart from '@/components/ComparisonChart';
@@ -13,8 +14,10 @@ import MapWrapper from '@/components/MapWrapper';
 export default function Home() {
   const [selectedWar, setSelectedWar] = useState<WarType>('iraq-2003');
   const [currentTime, setCurrentTime] = useState<string>('');
-  const [liveData] = useState(() => getConflictData('iran-2026'));
-  const historicalData = getConflictData(selectedWar);
+  const [liveData, setLiveData] = useState<ConflictData>(getConflictData('iran-2026'));
+  const [historicalData, setHistoricalData] = useState<ConflictData>(getConflictData('iraq-2003'));
+  const [apiStatus, setApiStatus] = useState<{ acled: boolean; hdx: boolean; historical: boolean }>({ acled: false, hdx: false, historical: true });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const updateTime = () => {
@@ -25,6 +28,27 @@ export default function Home() {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      
+      const status = getApiStatus();
+      setApiStatus(status);
+
+      const live = await fetchLiveData();
+      setLiveData(live);
+
+      const historical = await fetchHistoricalData(selectedWar);
+      if (historical) {
+        setHistoricalData(historical);
+      }
+      
+      setLoading(false);
+    }
+
+    loadData();
+  }, [selectedWar]);
 
   const metrics = [
     {
@@ -92,6 +116,26 @@ export default function Home() {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+            <div style={{ display: 'flex', gap: '12px', fontSize: '10px' }}>
+              <span style={{ 
+                padding: '4px 8px', 
+                borderRadius: '4px', 
+                background: apiStatus.acled ? 'rgba(0,255,136,0.2)' : 'rgba(255,61,0,0.2)',
+                color: apiStatus.acled ? 'var(--accent-success)' : 'var(--accent-live)',
+                border: `1px solid ${apiStatus.acled ? 'var(--accent-success)' : 'var(--accent-live)'}`,
+              }}>
+                ACLED {apiStatus.acled ? '●' : '○'}
+              </span>
+              <span style={{ 
+                padding: '4px 8px', 
+                borderRadius: '4px', 
+                background: apiStatus.hdx ? 'rgba(0,255,136,0.2)' : 'rgba(255,61,0,0.2)',
+                color: apiStatus.hdx ? 'var(--accent-success)' : 'var(--accent-live)',
+                border: `1px solid ${apiStatus.hdx ? 'var(--accent-success)' : 'var(--accent-live)'}`,
+              }}>
+                HDX {apiStatus.hdx ? '●' : '○'}
+              </span>
+            </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Conflict Duration</div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '18px', color: 'var(--accent-live)', fontWeight: 700 }}>
@@ -118,14 +162,42 @@ export default function Home() {
                 Data Sources
               </h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 2 }}>
-                <li>ACLED — Real-time event data</li>
-                <li>UCDP — Historical conflict records</li>
-                <li>HDX — Displacement metrics</li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ 
+                    width: 6, height: 6, borderRadius: '50%', 
+                    background: apiStatus.acled ? 'var(--accent-success)' : 'var(--accent-warning)' 
+                  }} />
+                  ACLED — {apiStatus.acled ? 'Connected' : 'Using demo data'}
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ 
+                    width: 6, height: 6, borderRadius: '50%', 
+                    background: apiStatus.hdx ? 'var(--accent-success)' : 'var(--accent-warning)' 
+                  }} />
+                  HDX — {apiStatus.hdx ? 'Connected' : 'Using demo data'}
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ 
+                    width: 6, height: 6, borderRadius: '50%', 
+                    background: 'var(--accent-success)' 
+                  }} />
+                  Historical — Static datasets
+                </li>
               </ul>
             </div>
           </aside>
 
           <div>
+            {loading && (
+              <div style={{ 
+                padding: '20px', 
+                textAlign: 'center', 
+                color: 'var(--text-secondary)',
+                marginBottom: '16px',
+              }}>
+                Loading data...
+              </div>
+            )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '8px' }}>
               <div className="animate-fade-in animate-delay-1">
                 <MetricCard 
@@ -169,7 +241,10 @@ export default function Home() {
         fontSize: '12px',
         color: 'var(--text-secondary)',
       }}>
-        <p>Data shown is for demonstration purposes. Real-time conflict data requires API keys from ACLED, UCDP, and HDX.</p>
+        <p>
+          {!apiStatus.acled && !apiStatus.hdx && 'Data shown uses demo values. Configure API keys for live data. '}
+          ACLED and HDX connections are indicated in the header.
+        </p>
         <p style={{ marginTop: '8px' }}>Last updated: {currentTime}</p>
       </footer>
     </div>
