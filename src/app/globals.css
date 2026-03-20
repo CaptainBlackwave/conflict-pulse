@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
   --bg-primary: #0a0c10;
@@ -12,9 +11,9 @@
   --text-primary: #e8eaed;
   --text-secondary: #8b9099;
   --border-color: #2a2f3a;
-  --font-heading: 'JetBrains Mono', monospace;
-  --font-body: 'IBM Plex Sans', sans-serif;
-  --font-mono: 'Space Mono', monospace;
+  --font-heading: var(--font-heading), 'JetBrains Mono', monospace;
+  --font-body: var(--font-body), 'IBM Plex Sans', sans-serif;
+  --font-mono: var(--font-mono), 'Space Mono', monospace;
 }
 
 * {
